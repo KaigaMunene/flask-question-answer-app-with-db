@@ -69,3 +69,17 @@ def delete_question(question_id):
     connection.commit()
     connection.close()
     return "Question deleted successfully"
+
+def add_answer(question_id, answer_id, answer):
+    connection = get_connection()
+    query = """
+    INSERT INTO answers(question_id, answer_id, answer)
+    VALUES (?,?,?)
+    """
+
+    connection.execute(query, (question_id, answer_id, answer))
+
+    connection.commit()
+
+    connection.close()
+    return "answer added successfully"

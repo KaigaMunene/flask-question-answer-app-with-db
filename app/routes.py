@@ -59,7 +59,7 @@ def post_question():
 def get_question(question_id):
     question = retrieve_one_question(question_id)
     if not question:
-        return jsonify({"message": "Question doesnt exist"}), 404
+        return jsonify({"message": "Question not found"}), 404
 
     return jsonify(question), 200
 
