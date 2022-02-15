@@ -7,10 +7,15 @@ from flask import jsonify, request
 from . import app
 from app.queries import (
     add_question,
+    delete_answer,
     delete_question,
+    retrieve_all_answers,
+    retrieve_an_answer,
     retrieve_one_question,
     retrieve_all_questions,
+    update_an_answer,
     update_question,
+    add_an_answer,
 )
 
 
@@ -48,7 +53,7 @@ def post_question():
     if retrieve_one_question(auto_generated_id):
         return (
             jsonify({"message": "The question exists, please check out the answers"}),
-            201,
+            303,
         )
 
     add_question(auto_generated_id, title, question)
@@ -89,6 +94,7 @@ def update_a_question(question_id):
     update_question(title, question, question_id)
     return jsonify({"message": "question updated successfully"}), 200
 
+
 @app.route(f"{path}/question/<string:question_id>", methods=["DELETE"])
 def delete_a_question(question_id):
     if retrieve_one_question(question_id) is None:
@@ -96,3 +102,51 @@ def delete_a_question(question_id):
 
     delete_question(question_id)
     return jsonify({"message": "Question successfully deleted"}), 204
+
+
+@app.route(f"{path}/answer", methods=["POST"])
+def add_answer():
+    data = request.get_json()
+    question_id = data.get("question_id")
+    answer = data.get("answer")
+    generated_answer_id = generate_id(answer)
+    if not retrieve_one_question(question_id):
+        return (
+            jsonify({"message": "Question doesnt exist"}),
+            404,
+        )
+    if retrieve_an_answer(generated_answer_id):
+        return jsonify({"message": "answer already exists check the answers"}), 400
+    add_an_answer(question_id, generated_answer_id, answer)
+    return jsonify({"message": "Answer posted successfully"}), 201
+
+@app.route(f"{path}/answer/<string:answer_id>", methods=["GET"])
+def get_an_answer(answer_id):
+    answer = retrieve_an_answer(answer_id)
+    if answer is None:
+        return jsonify({"message": "answer not found"}), 404
+    return jsonify({"answer": answer}), 200
+
+
+@app.route(f"{path}/answers", methods=["GET"])
+def get_all_answers():
+    answers = retrieve_all_answers()
+    return jsonify({"answer": answers})
+
+@app.route(f"{path}/answer/<string:answer_id>", methods=["PUT"])
+def update_answer(answer_id):
+    data = request.get_json()
+    answer = data.get("answer")
+    if retrieve_an_answer(answer_id) is None:
+        return jsonify({"message": "Answer not found"}), 404
+    update_an_answer(answer_id, answer)
+    return jsonify({"message": "answer updated successfully"}), 200
+
+
+@app.route(f"{path}/answer/<string:answer_id>", methods=["DELETE"])
+def delete_an_answer(answer_id):
+    if retrieve_an_answer(answer_id) is None:
+        return jsonify({"message": "Answer not found"}), 404
+    delete_answer(answer_id)
+    return jsonify({"message": "Question successfully deleted"}), 204
+
