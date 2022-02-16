@@ -5,11 +5,11 @@ def create_tables():
     connection = get_connection()
     try:
 
-        with open("schema.sql") as f:
+        with open("app/db/schema.sql") as f:
             connection.executescript(f.read())
 
     except Exception as e:
-        print(e)
+        raise Exception(f"Creating tables: {e}")
 
     finally:
         if connection:

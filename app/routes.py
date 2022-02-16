@@ -52,7 +52,7 @@ def post_question():
 
     if retrieve_one_question(auto_generated_id):
         return (
-            jsonify({"message": "The question exists, please check out the answers"}),
+            jsonify({"message": "The question already exists, check the answers"}),
             303,
         )
 
@@ -120,6 +120,7 @@ def add_answer():
     add_an_answer(question_id, generated_answer_id, answer)
     return jsonify({"message": "Answer posted successfully"}), 201
 
+
 @app.route(f"{path}/answer/<string:answer_id>", methods=["GET"])
 def get_an_answer(answer_id):
     answer = retrieve_an_answer(answer_id)
@@ -132,6 +133,7 @@ def get_an_answer(answer_id):
 def get_all_answers():
     answers = retrieve_all_answers()
     return jsonify({"answer": answers})
+
 
 @app.route(f"{path}/answer/<string:answer_id>", methods=["PUT"])
 def update_answer(answer_id):
@@ -149,4 +151,3 @@ def delete_an_answer(answer_id):
         return jsonify({"message": "Answer not found"}), 404
     delete_answer(answer_id)
     return jsonify({"message": "Question successfully deleted"}), 204
-

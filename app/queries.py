@@ -117,6 +117,7 @@ def retrieve_all_answers():
         all_answers.append(asw)
     return all_answers
 
+
 def update_an_answer(answer_id, answer):
     connection = get_connection()
     query = "UPDATE answers SET answer=? WHERE id=?"
@@ -126,6 +127,7 @@ def update_an_answer(answer_id, answer):
     connection.close()
     return "Answer updated successfully"
 
+
 def delete_answer(answer_id):
     connection = get_connection()
     query = "DELETE FROM answers WHERE id=?"
@@ -134,3 +136,4 @@ def delete_answer(answer_id):
     connection.commit()
     connection.close()
     return "Answer deleted successfully"
+
