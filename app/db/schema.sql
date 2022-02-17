@@ -9,7 +9,7 @@ CREATE TABLE questions (
 
 CREATE TABLE answers(
     id Text PRIMARY KEY,
-    answer NOT NULL,
+    answer TEXT NOT NULL,
     question_id TEXT NOT NULL,
     FOREIGN KEY(question_id)
         REFERENCES questions (id)

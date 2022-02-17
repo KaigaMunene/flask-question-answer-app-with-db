@@ -1,4 +1,5 @@
 from multiprocessing import connection
+from sqlite3 import connect
 from webbrowser import get
 from app import get_connection
 
@@ -117,6 +118,16 @@ def retrieve_all_answers():
         all_answers.append(asw)
     return all_answers
 
+def retrieve_all_answers_for_a_question(question_id):
+    connection = get_connection()
+    query = "SELECT * FROM answers WHERE question_id=?"
+    answers = connection.execute(query, (question_id,)).fetchall()
+
+    all_answers =[]
+    for answer in answers:
+        asw = {"answer_id": answer[0], "answer": answer[1], "question_id": answer[2]}
+        all_answers.append(asw)
+    return all_answers
 
 def update_an_answer(answer_id, answer):
     connection = get_connection()

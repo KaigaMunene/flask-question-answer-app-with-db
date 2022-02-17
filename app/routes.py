@@ -10,6 +10,7 @@ from app.queries import (
     delete_answer,
     delete_question,
     retrieve_all_answers,
+    retrieve_all_answers_for_a_question,
     retrieve_an_answer,
     retrieve_one_question,
     retrieve_all_questions,
@@ -117,6 +118,8 @@ def add_answer():
         )
     if retrieve_an_answer(generated_answer_id):
         return jsonify({"message": "answer already exists check the answers"}), 400
+    if not answer:
+        return jsonify({"message": "Invalid answer, enter a valid answer"}), 400
     add_an_answer(question_id, generated_answer_id, answer)
     return jsonify({"message": "Answer posted successfully"}), 201
 
@@ -134,6 +137,10 @@ def get_all_answers():
     answers = retrieve_all_answers()
     return jsonify({"answer": answers})
 
+@app.route(f"{path}/answers/<string:question_id>", methods=["GET"])
+def get_all_answers_to_a_question(question_id):
+    answers = retrieve_all_answers_for_a_question(question_id)
+    return jsonify({"answer": answers})
 
 @app.route(f"{path}/answer/<string:answer_id>", methods=["PUT"])
 def update_answer(answer_id):
